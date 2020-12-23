@@ -46,14 +46,14 @@ module.exports = msgHandler = async (client, message) => {
         const mess = {
             wait: '[ WAIT ] Sedang di proses⏳ silahkan tunggu sebentar',
             error: {
-                St: '[❗] Kirim gambar dengan caption *!sticker* atau tag gambar yang sudah dikirim',
-                Qm: '[❗] Terjadi kesalahan, mungkin themenya tidak tersedia!',
-                Yt3: '[❗] Terjadi kesalahan, tidak dapat meng konversi ke mp3!',
-                Yt4: '[❗] Terjadi kesalahan, mungkin error di sebabkan oleh sistem.',
-                Ig: '[❗] Terjadi kesalahan, mungkin karena akunnya private',
-                Ki: '[❗] Bot tidak bisa mengeluarkan admin group!',
-                Ad: '[❗] Tidak dapat menambahkan target, mungkin karena di private',
-                Iv: '[❗] Link yang anda kirim tidak valid!'
+                St: '[❗] Envíe la imagen con el título *! Sticker * o la etiqueta de imagen que se ha enviado',
+                Qm: '[❗] Ocurrió un error, ¡quizás el tema no esté disponible!',
+                Yt3: '[❗] ¡Algo salió mal, no se puede convertir a mp3!',
+                Yt4: '[❗] Ocurrió un error, tal vez el error fue causado por el sistema.',
+                Ig: '[❗] Ocurrió un error, tal vez porque la cuenta es privada',
+                Ki: '[❗] ¡El bot no puede emitir administrador de grupo!',
+                Ad: '[❗] No se puede agregar el objetivo, tal vez porque es privado',
+                Iv: '[❗] El enlace que envió no es válido.'
             }
         }
         const apiKey = 'API-KEY' // apikey you can get it at https://mhankbarbars.herokuapp.com/api
@@ -105,7 +105,7 @@ module.exports = msgHandler = async (client, message) => {
             if (isMedia) {
                 if (mimetype === 'video/mp4' && message.duration < 10 || mimetype === 'image/gif' && message.duration < 10) {
                     const mediaData = await decryptMedia(message, uaOverride)
-                    client.reply(from, '[WAIT] Sedang di proses⏳ silahkan tunggu ± 1 min!', id)
+                    client.reply(from, '[WAIT] Enviando proceso⏳ por favor espera ± 1 min!', id)
                     const filename = `./media/aswu.${mimetype.split('/')[1]}`
                     await fs.writeFileSync(filename, mediaData)
                     await exec(`gify ${filename} ./media/output.gif --fps=30 --scale=240:240`, async function (error, stdout, stderr) {
@@ -139,14 +139,14 @@ module.exports = msgHandler = async (client, message) => {
             client.sendLinkWithAutoPreview(from, 'https://saweria.co/donate/mhankbarbar', donate)
             break
         case '!tts':
-            if (args.length === 1) return client.reply(from, 'Kirim perintah *!tts [id, en, jp, ar] [teks]*, contoh *!tts id halo semua*')
+            if (args.length === 1) return client.reply(from, 'Enviar pedidos *!tts [id, en, jp, ar] [teks]*, ejemplo *!tts id halo semua*')
             const ttsId = require('node-gtts')('id')
             const ttsEn = require('node-gtts')('en')
 	    const ttsJp = require('node-gtts')('ja')
             const ttsAr = require('node-gtts')('ar')
             const dataText = body.slice(8)
             if (dataText === '') return client.reply(from, 'Baka?', id)
-            if (dataText.length > 500) return client.reply(from, 'Teks terlalu panjang!', id)
+            if (dataText.length > 500) return client.reply(from, '¡El texto es demasiado largo!', id)
             var dataBhs = body.slice(5, 7)
 	        if (dataBhs == 'id') {
                 ttsId.save('./media/tts/resId.mp3', dataText, function () {
@@ -165,11 +165,11 @@ module.exports = msgHandler = async (client, message) => {
                     client.sendPtt(from, './media/tts/resAr.mp3', id)
                 })
             } else {
-                client.reply(from, 'Masukkan data bahasa : [id] untuk indonesia, [en] untuk inggris, [jp] untuk jepang, dan [ar] untuk arab', id)
+                client.reply(from, 'Ingrese los datos del idioma : [id] para Indonesia, [en] para ingles, [jp] para japón, dan [ar] para árabe', id)
             }
             break
         case '!nulis':
-            if (args.length === 1) return client.reply(from, 'Kirim perintah *!nulis [teks]*', id)
+            if (args.length === 1) return client.reply(from, 'Enviar pedidos *!nulis [texto]*', id)
             const nulis = encodeURIComponent(body.slice(7))
             client.reply(from, mess.wait, id)
             let urlnulis = `https://mhankbarbars.herokuapp.com/nulis?text=${nulis}&apiKey=${apiKey}`
@@ -180,7 +180,7 @@ module.exports = msgHandler = async (client, message) => {
             }).catch(e => client.reply(from, "Error: "+ e));
             break
         case '!ytmp3':
-            if (args.length === 1) return client.reply(from, 'Kirim perintah *!ytmp3 [linkYt]*, untuk contoh silahkan kirim perintah *!readme*')
+            if (args.length === 1) return client.reply(from, 'Enviar pedidos *!ytmp3 [linkYt]*, por ejemplo, envíe el comando *! readme*')
             let isLinks = args[1].match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/)([^\s&]+)/)
             if (!isLinks) return client.reply(from, mess.error.Iv, id)
             try {
@@ -190,8 +190,8 @@ module.exports = msgHandler = async (client, message) => {
                     client.reply(from, resp.error, id)
                 } else {
                     const { title, thumb, filesize, result } = await resp
-                    if (Number(filesize.split(' MB')[0]) >= 30.00) return client.reply(from, 'Maaf durasi video sudah melebihi batas maksimal!', id)
-                    client.sendFileFromUrl(from, thumb, 'thumb.jpg', `➸ *Title* : ${title}\n➸ *Filesize* : ${filesize}\n\nSilahkan tunggu sebentar proses pengiriman file membutuhkan waktu beberapa menit.`, id)
+                    if (Number(filesize.split(' MB')[0]) >= 30.00) return client.reply(from, 'Lo sentimos, la duración del video ha excedido el límite máximo.', id)
+                    client.sendFileFromUrl(from, thumb, 'thumb.jpg', `➸ *Title* : ${title}\n➸ *Filesize* : ${filesize}\n\nEspere un momento a que el proceso de envío del archivo tarde unos minutos.`, id)
                     await client.sendFileFromUrl(from, result, `${title}.mp3`, '', id).catch(() => client.reply(from, mess.error.Yt3, id))
                     //await client.sendAudio(from, result, id)
                 }
@@ -220,23 +220,23 @@ module.exports = msgHandler = async (client, message) => {
             }
             break
         case '!wiki':
-            if (args.length === 1) return client.reply(from, 'Kirim perintah *!wiki [query]*\nContoh : *!wiki asu*', id)
+            if (args.length === 1) return client.reply(from, 'Enviar comando *! Wiki [consulta]*\nContoh : *!wiki asu*', id)
             const query_ = body.slice(6)
             const wiki = await get.get(`https://mhankbarbars.herokuapp.com/api/wiki?q=${query_}&lang=id&apiKey=${apiKey}`).json()
             if (wiki.error) {
                 client.reply(from, wiki.error, id)
             } else {
-                client.reply(from, `➸ *Query* : ${query_}\n\n➸ *Result* : ${wiki.result}`, id)
+                client.reply(from, `➸ *Consulta* : ${query_}\n\n➸ *Resultado* : ${wiki.result}`, id)
             }
             break
         case '!cuaca':
-            if (args.length === 1) return client.reply(from, 'Kirim perintah *!cuaca [tempat]*\nContoh : *!cuaca tangerang', id)
+            if (args.length === 1) return client.reply(from, 'Enviar comando *!cuaca [lugar del clima]*\nContoh : *!cuaca tangerang', id)
             const tempat = body.slice(7)
             const weather = await get.get(`https://mhankbarbars.herokuapp.com/api/cuaca?q=${tempat}&apiKey=${apiKey}`).json()
             if (weather.error) {
                 client.reply(from, weather.error, id)
             } else {
-                client.reply(from, `➸ Tempat : ${weather.result.tempat}\n\n➸ Angin : ${weather.result.angin}\n➸ Cuaca : ${weather.result.cuaca}\n➸ Deskripsi : ${weather.result.desk}\n➸ Kelembapan : ${weather.result.kelembapan}\n➸ Suhu : ${weather.result.suhu}\n➸ Udara : ${weather.result.udara}`, id)
+                client.reply(from, `➸ Lugar : ${weather.result.tempat}\n\n➸ Viento : ${weather.result.angin}\n➸ clima : ${weather.result.cuaca}\n➸ Descripción : ${weather.result.desk}\n➸ Humedad : ${weather.result.kelembapan}\n➸ Temperatura : ${weather.result.suhu}\n➸ Aire : ${weather.result.udara}`, id)
             }
             break
         case '!fb':
